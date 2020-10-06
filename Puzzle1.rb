@@ -3,10 +3,11 @@
 class Rfid
 #definimos un método que se llama read_uid 
 	def read_uid
-		#Hacemos un bucle infinito para reconocer non-stop las tarjetas
-		scan = 1 #esta variable indicará si se puede o no escalear 
+		#Hacemos un bucle infinito para reconocer tarjetas en el que el usuario
+		#puede decidir si se continúa o no escaneando. 
+		scan = 1 #esta variable indicará si se continúa o no escaneando 
 		while scan do
-			#El programa demana a l'usuari que escanegi la targeta
+			#El programa pide al usuario que escanee la tarjeta 
 			puts "Please, swipe your card"
 			userid = gets #gets returns a string 
 			userid = userid.chomp #deletes from string the final 'enter'
@@ -15,9 +16,9 @@ class Rfid
 			userid = userid.to_i
 			#converts decimal to hexadecimal string
 			userid = userid.to_s(16)
-			#convierte minúsculas en mayúsculas 
+			#convierte minúsculas a mayúsculas 
 			userid = userid.upcase
-			#mostramos uid por pantalla
+			#muestra uid por pantalla
 			puts "Your UserID in hexadecimal is: #{userid}" 
 			#pregunta al usuario si quiere volver a escanear 
 			puts "Do you want to scann again? (y/n)"
@@ -25,7 +26,6 @@ class Rfid
 			if again=='n'
 				scan = nil #pones la variable scan a false para que salga del bucle 
 			end 
-			
 		end 
 		#ruby returns the last evaluated expression, so 
 		#we do not need to use 'return' here 
