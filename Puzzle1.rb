@@ -1,30 +1,31 @@
 #return uid in hexa str 
-require 'nfc' 
-
 #creamos una clase que se llama Rfid 
 class Rfid
 #definimos un método que se llama read_uid 
 	def read_uid
-		# Create a new context
-		ctx = NFC::Context.new
-		# Abrimos el primer puerto USB disponible (en nuestro caso el RFID)
-		#usamos nil para indicar que el puerto de entrada esta en 'empty' 
-		#vendría siendo un estado inicial, sin que hayamos pasado ninguna
-		#tarjeta 
-		treadr = ctx.open nil
-		# Hacemos un bucle infinito para reconocer non-stop las tarjetas
-		loop do
-			#select bloquea hasta que se escanea una tarjeta 
-			#luego recibe data del rfid que guarda en userid 
-			userid = treadr.select
+		#Hacemos un bucle infinito para reconocer non-stop las tarjetas
+		scan = 1 #esta variable indicará si se puede o no escalear 
+		while scan do
+			#El programa demana a l'usuari que escanegi la targeta
+			puts "Please, swipe your card"
 			userid = gets #gets returns a string 
 			userid = userid.chomp #deletes from string the final 'enter'
+			puts "Your ID in decimal base is: #{userid}"
 			#converts string data to decimal integer 
 			userid = userid.to_i
 			#converts decimal to hexadecimal string
 			userid = userid.to_s(16)
 			#convierte minúsculas en mayúsculas 
 			userid = userid.upcase
+			#mostramos uid por pantalla
+			puts "Your UserID in hexadecimal is: #{userid}" 
+			#pregunta al usuario si quiere volver a escanear 
+			puts "Do you want to scann again? (y/n)"
+			again = gets.chomp 
+			if again=='n'
+				scan = nil #pones la variable scan a false para que salga del bucle 
+			end 
+			
 		end 
 		#ruby returns the last evaluated expression, so 
 		#we do not need to use 'return' here 
@@ -45,7 +46,5 @@ if __FILE__ == $0
 rf = Rfid.new()
 #metemos en la variable uid el output del método read_uid sobre 
 #el objeto rf de a clase Rfid 
-uid = rf.read_uid
-#mostramos uid por pantalla
-puts uid 
+rf.read_uid
 end 
