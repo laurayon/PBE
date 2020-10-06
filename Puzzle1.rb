@@ -44,7 +44,6 @@ end
 if __FILE__ == $0
 #creamos un objeto de la clase Rfid llamado rf
 rf = Rfid.new()
-#metemos en la variable uid el output del método read_uid sobre 
-#el objeto rf de a clase Rfid 
+#llamamos al método read_uid sobre el objeto rf de la clase Rfid 
 rf.read_uid
 end 
