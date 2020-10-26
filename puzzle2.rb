@@ -14,8 +14,8 @@ class puzzle2 < Gtk::Window
     @css_provider = Gtk::CssProvider.new
     #Create a grid to help widget placement 
     @grid = Gtk::Grid.new
-    #Create a label   
-    @label = Gtk::Label.new
+    #Create a label with default message   
+    @label = Gtk::Label.new "Please, login with your university card"
     #Create 'Clear' button
     @cbutton = Gtk::Button.new(:label => "Clear")
     
@@ -44,10 +44,7 @@ class puzzle2 < Gtk::Window
     signal_connect "destroy" do Gtk.main_quit end 
     #Define consequence of clicking 'Clear' button 
     @cbutton.signal_connect "clicked" do clearButton end
-    
   end  
-  
-  
   
   
   #This function defines what happens when 'Clear' button is pressed 
@@ -59,13 +56,15 @@ class puzzle2 < Gtk::Window
                          label{color: white;}\
                          label{background-color: brown;}"
                  )
-    #Message on label changes to 'Please, login with your university card'
+    #Label restores message 
+    @label.set_text "Please, login with your university card"
   end 
   
   #This function defines what happens when UID is scanned 
   def show_uid(string)
     #label turns red  
     #Message on label changes to 'uid: scanned UID'
+    @label.set_text "uid: #{string}"
   end 
   
   #This function works for threads 
