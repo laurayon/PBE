@@ -14,13 +14,3 @@ class Rfid
     #we do not need to use 'return' here 
   end
 end
-
-#En este caso lo estamos usando como ejecutable. 
-if __FILE__ == $0
-#creamos un objeto de la clase Rfid llamado rf
-rf = Rfid.new()
-#llamamos al método read_uid sobre el objeto rf de la clase Rfid, guardamos el output en uid 
-uid = rf.read_uid
-#muestra uid por pantalla 
-puts uid
-end 
