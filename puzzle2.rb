@@ -14,8 +14,8 @@ class puzzle2 < Gtk::Window
     @css_provider = Gtk::CssProvider.new
     #Create a grid to help widget placement 
     @grid = Gtk::Grid.new
-    #Create a label with default message  
-    @label = Gtk::Label.new "Please, login with your university card"
+    #Create a label   
+    @label = Gtk::Label.new
     #Create 'Clear' button
     @cbutton = Gtk::Button.new(:label => "Clear")
     
@@ -26,23 +26,24 @@ class puzzle2 < Gtk::Window
     set_size_request(550,200) 
     set_border_width(10)
     #Set label dimensions
-    label.set_size_request(550,150) 
+    @label.set_size_request(550,150) 
     #Set 'Clear' button dimensions 
-    cbutton.set_size_request(550,50) 
+    @cbutton.set_size_request(550,50) 
     #set screen position where window is displayed: center
     set_window_position(:center)
+    #Add grid to window 
+    add(@grid) 
     #Define initial disposition of button and label on the window
-    #Attach label to grid
-    #attach(child, left(column), top(row), width, height)
-    grid.attach label, 0, 0, 1, 1
+    #Attach label to grid: attach(child, column, row, width, height)
+    @grid.attach @label, 0, 0, 1, 1
     #Attach button to grid 
-    grid.attach cbutton, 0, 1, 1, 1
+    @grid.attach @cbutton, 0, 1, 1, 1
     
     #Define window interactions 
     #Define that window closes when 'x' button is pressed 
     signal_connect "destroy" do Gtk.main_quit end 
     #Define consequence of clicking 'Clear' button 
-    cbutton.signal_connect "clicked" do clearButton end
+    @cbutton.signal_connect "clicked" do clearButton end
     
   end  
   
@@ -52,7 +53,7 @@ class puzzle2 < Gtk::Window
   #This function defines what happens when 'Clear' button is pressed 
   def clearButton
     #label restores message
-    label.set_label 
+    @label.set_text "Please, login with your university card"
     #label turns blue 
     css_provider.load(data: "label{background-color: blue;}\
                          label{color: white;}\
@@ -62,7 +63,7 @@ class puzzle2 < Gtk::Window
   end 
   
   #This function defines what happens when UID is scanned 
-  def show_uid
+  def show_uid(string)
     #label turns red  
     #Message on label changes to 'uid: scanned UID'
   end 
