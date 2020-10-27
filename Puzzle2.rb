@@ -1,3 +1,4 @@
+#GUI for RFID 
 #we use puzzle1.rb as library, we use the order 'relative'
 #because puzzle1 is in the same directory as puzzle2. 
 require_relative 'Puzzle1.rb'
