@@ -76,13 +76,19 @@ class Puzzle2 < Gtk::Application
     @label.style_context.add_provider(@css_provider, Gtk::StyleProvider::PRIORITY_USER)
     #Message on label changes to 'uid: scanned UID'
     @label.set_text "uid: #{string}"
-    #Tell Glib it has to stop performing second-plane tasks 
+    #Tell Glib to stop calling show_uid because it has already been called 
     return false 
   end 
   
-  #Aux receives what read_uid has scanned, and calls show_uid  
+  #Aux receives what read_uid has scanned, and calls show_uid when there are no other tasks
+  #being performed at the moment. 
   def aux (string)
-    Glib::Idle.add{show_uid(string)}
+    #GLib:: Idle.add Adds a block to be called (show_uid) whenever there are no higher priority
+    #events pending to the default main loop. The block is given the default idle 
+    #priority, GLib::PRIORITY_DEFAULT_IDLE. 
+     GLib::Idle.add{show_uid(string)}
+    #If the block returns FALSE (which we do once it has been called once) it is 
+    #automatically removed from the list of event sources and will not be called again.
   end 
 end 
 
