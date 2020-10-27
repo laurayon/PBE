@@ -43,6 +43,9 @@ class Puzzle2 < Gtk::Application
       #Define window interactions 
       #Define consequence of clicking 'Clear' button 
       cbutton.signal_connect ("clicked") {clearButton}
+      #Define consequence of keyboard event 
+      w.add_events(Gdk::Event::KEY_PRESS)
+      w.signal_connect("key-press-event"){keyboardPress}
       
       #Aesthetically characterize window
       #Add grid to window 
@@ -59,8 +62,12 @@ class Puzzle2 < Gtk::Application
       w.show_all
     end
   end        
+  #This method is a substitute for the .gets method 
+  def keyboardPress
     
-  #This function defines what happens when 'Clear' button is pressed 
+  end 
+  
+  #This method defines what happens when 'Clear' button is pressed 
   def clearButton
     #label restores message
     @label.set_text "Please, login with your university card"
@@ -70,25 +77,25 @@ class Puzzle2 < Gtk::Application
     @label.style_context.add_provider(@css_provider, Gtk::StyleProvider::PRIORITY_USER)
   end 
   
-  #This function defines what happens when UID is scanned 
-  def show_uid(string)
+  #This method defines what happens when UID is scanned 
+  def showUID(string)
     #label turns red  
     @css_provider.load(:data => "label {background-color: red;}\
                                 label{color: white;}")
     @label.style_context.add_provider(@css_provider, Gtk::StyleProvider::PRIORITY_USER)
     #Message on label changes to 'uid: scanned UID'
     @label.set_text "uid: #{string}"
-    #Tell Glib to stop calling show_uid because it has already been called 
+    #Tell Glib to stop calling showUID because it has already been called 
     return false 
   end 
   
   #Aux receives what read_uid has scanned, and calls show_uid when there are no other tasks
   #being performed at the moment. 
   def aux (string)
-    #GLib:: Idle.add Adds a block to be called (show_uid) whenever there are no higher priority
+    #GLib:: Idle.add Adds a block to be called (showUID) whenever there are no higher priority
     #events pending to the default main loop. The block is given the default idle 
     #priority, GLib::PRIORITY_DEFAULT_IDLE. 
-     GLib::Idle.add{show_uid(string)}
+     GLib::Idle.add{showUID(string)}
     #If the block returns FALSE (which we do once it has been called once) it is 
     #automatically removed from the list of event sources and will not be called again.
   end 
