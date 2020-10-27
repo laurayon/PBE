@@ -20,10 +20,10 @@ class Puzzle2 < Gtk::Application
       #Create 'Clear button'
       cbutton = Gtk::Button.new(:label => "Clear")
       #Create a label 
-      label = Gtk::Label.new
+      @label = Gtk::Label.new
       #Create css_provider (used in gtk3 to store and change parameters
       #such as colour or font)  
-      css_provider = Gtk::CssProvider.new
+      @css_provider = Gtk::CssProvider.new
       
       #Characterize elements 
       #Set window tittle 
@@ -34,7 +34,7 @@ class Puzzle2 < Gtk::Application
       #set screen position where window is displayed: center
       w.set_window_position(:center)
       #Set label dimensions
-      label.set_size_request(550,150) 
+      @label.set_size_request(550,150) 
       #Set 'Clear' button dimensions 
       cbutton.set_size_request(550,50) 
       
@@ -47,7 +47,7 @@ class Puzzle2 < Gtk::Application
       w.add(grid)
       #Define initial disposition of button and label on the window
       #Attach label to grid: grid cell (0,0), no spanning 
-      grid.attach(label, 0, 0, 1, 1) 
+      grid.attach(@label, 0, 0, 1, 1) 
       #Define label characteristics by calling clearButton method 
       clearButton
       #Attach button to grid : grid cell (0,1), no spanning 
@@ -56,27 +56,26 @@ class Puzzle2 < Gtk::Application
       #Show all widgets on window 
       w.show_all
     end
-  end    
-end     
+  end        
     
   #This function defines what happens when 'Clear' button is pressed 
   def clearButton
     #label restores message
-    label.set_text "Please, login with your university card"
+    @label.set_text "Please, login with your university card"
     #label turns blue, text in white
-    css_provider.load(:data => "label {background-color: blue;}\
+    @css_provider.load(:data => "label {background-color: blue;}\
                                 label{color: white;}")
-    label.style_context.add_provider(css_provider, Gtk::StyleProvider::PRIORITY_USER)
+    @label.style_context.add_provider(@css_provider, Gtk::StyleProvider::PRIORITY_USER)
   end 
   
   #This function defines what happens when UID is scanned 
   def show_uid(string)
     #label turns red  
-    css_provider.load(:data => "label {background-color: red;}\
+    @css_provider.load(:data => "label {background-color: red;}\
                                 label{color: white;}")
-    label.style_context.add_provider(css_provider, Gtk::StyleProvider::PRIORITY_USER)
+    @label.style_context.add_provider(@css_provider, Gtk::StyleProvider::PRIORITY_USER)
     #Message on label changes to 'uid: scanned UID'
-    label.set_text "uid: #{string}"
+    @label.set_text "uid: #{string}"
     #Tell Glib it has to stop performing second-plane tasks 
     return false 
   end 
@@ -107,3 +106,4 @@ if __FILE__ == $0
   status = app.run([$0] + ARGV)
   puts status
 end
+
