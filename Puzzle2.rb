@@ -109,7 +109,8 @@ if __FILE__ == $0
     #loop that asks for scanned cards 
     while 1 do 
       app.aux(rf.read_uid())
-      sleep 2 
+      #poll RFID every 3 seconds
+      sleep 3 
     end
     }
   #launch application
