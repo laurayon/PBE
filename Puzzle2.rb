@@ -80,13 +80,16 @@ class Puzzle2 < Gtk::Application
     return false 
   end 
   
-  #This function works for threads 
+  #Aux receives what read_uid has scanned, and calls show_uid  
   def aux (string)
     Glib::Idle.add{show_uid(string)}
   end 
 end 
 
 #MAIN PROGRAMM CODE
+#It consists of 2 threads, one that launches the GUI, and another one that 
+#asks the RF ID reader if it has scanned a card 
+
 if __FILE__ == $0
   #we set a thread exception in case thread doesn't work 
   Thread.abort_on_exception = true; 
@@ -94,9 +97,10 @@ if __FILE__ == $0
   app = Puzzle2.new()
   #Create object from Rfid class
   rf = Rfid.new()
-  #Create a thread that allows reading from UID while graphic window is
+  #Create the thread that allows reading from UID while graphic window is
   #asking for UID 
   t_read = Thread.new {
+    #loop that asks for scanned cards 
     while 1 do 
       app.aux(rf.read_uid())
       sleep 2 
