@@ -4,7 +4,7 @@ require_relative 'Puzzle1.rb'
 #we require the ruby GNOME2 library in order to work with graphic interfaces
 require 'gtk3'
 
-#we create a class puzzle2 that inherits from  Gtk::ApplicationWindow 
+#we create a class puzzle2 that inherits from  Gtk::Application
 #it will create an Application that will gererate a window
 class Puzzle2 < Gtk::Application 
   #we define the class constructor 
@@ -77,10 +77,13 @@ end
     label.style_context.add_provider(css_provider, Gtk::StyleProvider::PRIORITY_USER)
     #Message on label changes to 'uid: scanned UID'
     label.set_text "uid: #{string}"
+    #Tell Glib it has to stop performing second-plane tasks 
+    return false 
   end 
   
   #This function works for threads 
-  def aux
+  def aux (string)
+    Glib::Idle.add{show_uid(string)}
   end 
 end 
 
@@ -96,8 +99,8 @@ if __FILE__ == $0
   #asking for UID 
   t_read = Thread.new {
     while 1 do 
-      w.aux(rf.read_uid())
-      sleep 1 
+      app.aux(rf.read_uid())
+      sleep 2 
     end
     }
   #launch application
