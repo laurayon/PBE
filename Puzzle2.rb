@@ -12,6 +12,8 @@ class Puzzle2 < Gtk::Application
     super("puzzle2.application", :flags_none)
     #string variable where UID will be stored 
     @UIDstore = String.new("")
+    #boolean variable that defines if UID has been scanned or not
+    @scanned = false 
     #Define activate event for application window
     signal_connect "activate" do |application|
       #Define Application elements 
@@ -43,8 +45,10 @@ class Puzzle2 < Gtk::Application
       #Define window interactions 
       #Define consequence of clicking 'Clear' button 
       cbutton.signal_connect ("clicked") {clearButton}
-      #Create a window event 
-      w.add_events(Gdk::Event::KEY_PRESS)
+      #Create a window event
+      #@wevent = Gdk::EventMask::KEY_PRESS_MASK
+      @wevent = Gdk::EventKey.new(Gdk::Event::KEY_PRESS)
+      w.add_events(@wevent)
       #Define consequence of keyboard event 
       w.signal_connect("key-press-event"){keyboardPress}
       
@@ -67,9 +71,12 @@ class Puzzle2 < Gtk::Application
   #It will be called whenever a key is pressed 
   def keyboardPress
     #if the key pressed is not 'enter' 
-    if (Gdk::Keyval.to_name ~= "\n") 
-      @UIDstore += Gdk::Keyval.to_name
-    end 
+    if (@wevent.keyval != GDK_3270_Enter) 
+      @UIDstore += Gdk::Keyval.to_name(@wevent.keyval)
+    #if enter has been pressed and UIDstore is not empty
+    elsif (@UIDstore.length >0)
+      @scanned = true; 
+    end
   end 
   
   #This method defines what happens when 'Clear' button is pressed 
@@ -86,12 +93,14 @@ class Puzzle2 < Gtk::Application
   def showUID(string)
     #label turns red  
     @css_provider.load(:data => "label {background-color: red;}\
-                                label{color: white;}")
+                                 label{color: white;}")
     @label.style_context.add_provider(@css_provider, Gtk::StyleProvider::PRIORITY_USER)
     #Message on label changes to 'uid: scanned UID'
     @label.set_text "uid: #{string}"
     #Restore UIDstore value
     @UIDstore = "" 
+    #Actualize scanned
+    @scanned = false 
     #Tell Glib to stop calling showUID because it has already been called 
     return false 
   end 
@@ -124,7 +133,9 @@ if __FILE__ == $0
   t_read = Thread.new {
     #loop that asks for scanned cards 
     while 1 do 
+      if @scanned 
       app.aux(rf.read_uid(@UIDstore))
+      end
       #poll RFID every 3 seconds
       sleep 3 
     end
@@ -133,4 +144,3 @@ if __FILE__ == $0
   status = app.run([$0] + ARGV)
   puts status
 end
-
