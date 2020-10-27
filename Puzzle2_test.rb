@@ -6,7 +6,7 @@ require 'gtk3'
 
 #we create a class puzzle2 that inherits from  Gtk::ApplicationWindow 
 #it will create an Application that will gererate a window
-class Puzzle2 < Gtk::ApplicationWindow  
+class Puzzle2 < Gtk::Application 
   #we define the class constructor 
   def initialize 
     super("puzzle2.application", :flags_none) 
@@ -14,7 +14,7 @@ class Puzzle2 < Gtk::ApplicationWindow
     signal_connect "activate" do |application|
       #Define Application elements 
       #Create a window 
-      w = ExampleAppWindow.new(application)
+      w = Gtk::ApplicationWindow.new(application)
       #Create a grid to help widget placement on window
       grid = Gtk::Grid.new
       #Create 'Clear button'
@@ -47,14 +47,14 @@ class Puzzle2 < Gtk::ApplicationWindow
       w.add(grid)
       #Define initial disposition of button and label on the window
       #Attach label to grid: grid cell (0,0), no spanning 
-      grid.attach (label, 0, 0, 1, 1) 
+      grid.attach(label, 0, 0, 1, 1) 
       #Define label characteristics by calling clearButton method 
       clearButton
       #Attach button to grid : grid cell (0,1), no spanning 
-      grid.attach (cbutton, 0, 1, 1, 1)
+      grid.attach(cbutton, 0, 1, 1, 1)
       
       #Show all widgets on window 
-      window.show_all
+      w.show_all
     end
   end    
 end     
@@ -88,10 +88,8 @@ end
 if __FILE__ == $0
   #we set a thread exception in case thread doesn't work 
   Thread.abort_on_exception = true; 
-  #Create a new window
+  #Create a new application 
   app = Puzzle2.new()
-  status = app.run([$0] + ARGV)
-  puts status
   #Create object from Rfid class
   rf = Rfid.new()
   #Create a thread that allows reading from UID while graphic window is
@@ -102,6 +100,7 @@ if __FILE__ == $0
       sleep 1 
     end
     }
-  #Run main loop until main_quit is called 
-  Gtk.main
+  #launch application
+  status = app.run([$0] + ARGV)
+  puts status
 end
