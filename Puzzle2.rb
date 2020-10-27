@@ -45,13 +45,12 @@ class Puzzle2 < Gtk::Application
       
       #Define window interactions 
       #Define consequence of clicking 'Clear' button 
-      cbutton.signal_connect ("clicked") {clearButton}
+      cbutton.signal_connect ("clicked") {clear_button}
       #Create a window event
-      #@wevent = Gdk::EventMask::KEY_PRESS_MASK
-      @wevent = Gdk::EventKey.new(Gdk::Event::KEY_PRESS)
+      @wevent = Gdk::EventMask::KEY_PRESS_MASK
       w.add_events(@wevent)
       #Define consequence of keyboard event 
-      w.signal_connect("key-press-event"){keyboardPress}
+      w.signal_connect("key-press-event"){keyboard_press}
       
       #Aesthetically characterize window
       #Add grid to window 
@@ -59,21 +58,22 @@ class Puzzle2 < Gtk::Application
       #Define initial disposition of button and label on the window
       #Attach label to grid: grid cell (0,0), no spanning 
       grid.attach(@label, 0, 0, 1, 1) 
-      #Define label characteristics by calling clearButton method 
-      clearButton
+      #Define label characteristics by calling clear_button method 
+      clear_button
       #Attach button to grid : grid cell (0,1), no spanning 
       grid.attach(cbutton, 0, 1, 1, 1)
       
       #Show all widgets on window 
       w.show_all
     end
-  end        
+  end     
+     
   #This method is a substitute for the .gets method 
   #It will be called whenever a key is pressed 
-  def keyboardPress
+  def keyboard_press
     #if the key pressed is not 'enter' 
-    if (@wevent.keyval != GDK_3270_Enter) 
-      @UIDstore += Gdk::Keyval.to_name(@wevent.keyval)
+    if (@wevent.keyval!= Gdk::Keyval::KEY_Return) 
+      @UIDstore += @wevent.keyval 
     #if enter has been pressed and UIDstore is not empty
     elsif (@UIDstore.length >0)
       @scanned = true; 
@@ -81,7 +81,7 @@ class Puzzle2 < Gtk::Application
   end 
   
   #This method defines what happens when 'Clear' button is pressed 
-  def clearButton
+  def clear_button
     #label restores message
     @label.set_text "Please, login with your university card"
     #label turns blue, text in white
@@ -91,7 +91,7 @@ class Puzzle2 < Gtk::Application
   end 
   
   #This method defines what happens when UID is scanned 
-  def showUID(string)
+  def show_UID(string)
     #label turns red  
     @css_provider.load(:data => "label {background-color: red;}\
                                  label{color: white;}")
@@ -112,7 +112,7 @@ class Puzzle2 < Gtk::Application
     #GLib:: Idle.add Adds a block to be called (showUID) whenever there are no higher priority
     #events pending to the default main loop. The block is given the default idle 
     #priority, GLib::PRIORITY_DEFAULT_IDLE. 
-     GLib::Idle.add{showUID(string)}
+     GLib::Idle.add{show_UID(string)}
     #If the block returns FALSE (which we do once it has been called once) it is 
     #automatically removed from the list of event sources and will not be called again.
   end 
@@ -145,3 +145,4 @@ if __FILE__ == $0
   status = app.run([$0] + ARGV)
   puts status
 end
+
