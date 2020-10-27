@@ -1,5 +1,3 @@
-include <gtk/gtk.h>
-include <gtk/gtkimmodule.h>
 #we use puzzle1.rb as library, we use the order 'relative'
 #because puzzle1 is in the same directory as puzzle2. 
 require_relative 'Puzzle1.rb'
@@ -11,7 +9,9 @@ require 'gtk3'
 class Puzzle2 < Gtk::Application 
   #we define the class constructor 
   def initialize 
-    super("puzzle2.application", :flags_none) 
+    super("puzzle2.application", :flags_none)
+    #string variable where UID will be stored 
+    @UIDstore = String.new("")
     #Define activate event for application window
     signal_connect "activate" do |application|
       #Define Application elements 
@@ -43,8 +43,9 @@ class Puzzle2 < Gtk::Application
       #Define window interactions 
       #Define consequence of clicking 'Clear' button 
       cbutton.signal_connect ("clicked") {clearButton}
-      #Define consequence of keyboard event 
+      #Create a window event 
       w.add_events(Gdk::Event::KEY_PRESS)
+      #Define consequence of keyboard event 
       w.signal_connect("key-press-event"){keyboardPress}
       
       #Aesthetically characterize window
@@ -63,8 +64,12 @@ class Puzzle2 < Gtk::Application
     end
   end        
   #This method is a substitute for the .gets method 
+  #It will be called whenever a key is pressed 
   def keyboardPress
-    
+    #if the key pressed is not 'enter' 
+    if (Gdk::Keyval.to_name ~= "\n") 
+      @UIDstore += Gdk::Keyval.to_name
+    end 
   end 
   
   #This method defines what happens when 'Clear' button is pressed 
@@ -85,6 +90,8 @@ class Puzzle2 < Gtk::Application
     @label.style_context.add_provider(@css_provider, Gtk::StyleProvider::PRIORITY_USER)
     #Message on label changes to 'uid: scanned UID'
     @label.set_text "uid: #{string}"
+    #Restore UIDstore value
+    @UIDstore = "" 
     #Tell Glib to stop calling showUID because it has already been called 
     return false 
   end 
@@ -117,7 +124,7 @@ if __FILE__ == $0
   t_read = Thread.new {
     #loop that asks for scanned cards 
     while 1 do 
-      app.aux(rf.read_uid())
+      app.aux(rf.read_uid(@UIDstore))
       #poll RFID every 3 seconds
       sleep 3 
     end
