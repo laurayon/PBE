@@ -47,8 +47,15 @@ class Puzzle2 < Gtk::Application
       #Define consequence of clicking 'Clear' button 
       cbutton.signal_connect ("clicked") {clear_button}
       #Define consequence of keyboard event 
-      w.signal_connect("key-press-event"){|w, @wevent|
-        keyboard_press}
+      w.signal_connect("key-press-event"){|w, wevent|
+        #if the key pressed is not 'enter' 
+		    if (wevent.keyval!= Gdk::Keyval::KEY_Return) 
+		      @UIDstore += Gdk::Keyval.to_name(wevent.keyval)  
+		    #if enter has been pressed and UIDstore is not empty
+		    elsif (@UIDstore.length >0)
+		      @scanned = true; 
+		    end
+	    }
       
       #Aesthetically characterize window
       #Add grid to window 
@@ -66,18 +73,7 @@ class Puzzle2 < Gtk::Application
     end
   end     
      
-  #This method is a substitute for the .gets method 
-  #It will be called whenever a key is pressed 
-  def keyboard_press
-    #if the key pressed is not 'enter' 
-    if (@wevent.keyval!= Gdk::Keyval::KEY_Return) 
-      @UIDstore += Gdk::Keyval.to_name(@wevent.keyval)  
-    #if enter has been pressed and UIDstore is not empty
-    elsif (@UIDstore.length >0)
-      @scanned = true; 
-    end
-  end 
-  
+ 
   #This method defines what happens when 'Clear' button is pressed 
   def clear_button
     #label restores message
@@ -143,4 +139,3 @@ if __FILE__ == $0
   status = app.run([$0] + ARGV)
   puts status
 end
-
