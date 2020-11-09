@@ -46,11 +46,9 @@ class Puzzle2 < Gtk::Application
       #Define window interactions 
       #Define consequence of clicking 'Clear' button 
       cbutton.signal_connect ("clicked") {clear_button}
-      #Create a window event
-      @wevent = Gdk::EventMask::KEY_PRESS_MASK
-      w.add_events(@wevent)
       #Define consequence of keyboard event 
-      w.signal_connect("key-press-event"){keyboard_press}
+      w.signal_connect("key-press-event"){|w, @wevent|
+        keyboard_press}
       
       #Aesthetically characterize window
       #Add grid to window 
@@ -73,7 +71,7 @@ class Puzzle2 < Gtk::Application
   def keyboard_press
     #if the key pressed is not 'enter' 
     if (@wevent.keyval!= Gdk::Keyval::KEY_Return) 
-      @UIDstore += @wevent.keyval 
+      @UIDstore += Gdk::Keyval.to_name(@wevent.keyval)  
     #if enter has been pressed and UIDstore is not empty
     elsif (@UIDstore.length >0)
       @scanned = true; 
