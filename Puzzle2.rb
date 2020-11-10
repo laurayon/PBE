@@ -49,13 +49,13 @@ class Puzzle2 < Gtk::Application
       #Define consequence of keyboard event 
       w.signal_connect("key-press-event"){|w, wevent|
         #if the key pressed is not 'enter' 
-		    if (wevent.keyval!= Gdk::Keyval::KEY_Return) 
-		      @UIDstore += Gdk::Keyval.to_name(wevent.keyval)  
-		    #if enter has been pressed and UIDstore is not empty
-		    elsif (@UIDstore.length >0)
-		      @scanned = true; 
-		    end
-	    }
+        if (wevent.keyval!= Gdk::Keyval::KEY_Return) 
+          @UIDstore += Gdk::Keyval.to_name(wevent.keyval)  
+	#if enter has been pressed and UIDstore is not empty
+	elsif (@UIDstore.length >0)
+	  @scanned = true; 
+	end
+      }
       
       #Aesthetically characterize window
       #Add grid to window 
@@ -123,6 +123,8 @@ if __FILE__ == $0
   app = Puzzle2.new()
   #Create object from Rfid class
   rf = Rfid.new()
+  #Create boolean 
+  @scanned = false 
   #Create the thread that allows reading from UID while graphic window is
   #asking for UID 
   t_read = Thread.new {
